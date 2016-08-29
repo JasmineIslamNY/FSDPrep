@@ -11,42 +11,57 @@ public class StringProcessor {
 		 * It checks the command for size (255 or less) 
 		 * Breaks it into component pieces
 		 * Checks that tokens are between 3 and 6
+		 * Checks that the dealer sending the request is valid
 		 * Uses try/catch to test convert price and amount 
 		 * Returns String array to caller
 		 */
 		
 		//check length of command user input is 255 or less
 		if (order.length() > 255) {
-			result = new String[]{"Error", "Command length is more than 255 characters"};
+			result = new String[]{"INVALID_MESSAGE", "Command length limited to 255 characters"};
 			return result;
 		}
 		
 		// take the string that user input and break it up into an array 
 		result = tokenize(order);
 		
-		//check that Price can be converted to Double
+		//check that the message is not Invalid
+		if (result[0].equals("INVALID_MESSAGE") {
+			return result;
+		}
+		
+		//check that the dealer sending the request is valid
+		if (!(DATA.checkDealerID(result[0]))) {
+			result[0] = "UNAUTHORIZED";
+			result[1] = "You are not authorized to use this system";
+			return result;
+		}
+		
+		//check POST command
 		if (result[1].equals("POST")) {
+			//check that Price can be converted to Double
 			try {
 				Double d = Double.parseDouble(result[5]);
 			}
 			catch (NumberFormatException e){
 				result[0] = "INVALID_MESSAGE";
-				result[1] = "Price was not input correctly";
-				
+				result[1] = "Price was not input correctly";	
 			}
-		}
-		
-		//check that Amount can be converted to Integer for POST
-		if (result[1].equals("POST")) {
+			//check that Amount can be converted to Integer for POST
 			try {
 				Integer i = Integer.parseInt(result[4]);
 			}
 			catch (NumberFormatException e){
+				if (result[0].equals("INVALID_MESSAGE")) {
+					result[1] = "Amount was not input correctly and " + result[1];
+				}
+				else {
 				result[0] = "INVALID_MESSAGE";
 				result[1] = "Amount was not input correctly";
-				
-			}
+				}	
+			}		
 		}
+		
 		//check that Amount can be converted to Integer for AGGRESS
 		if (result[1].equals("AGGRESS")) {
 			try {
@@ -58,6 +73,7 @@ public class StringProcessor {
 				
 			}
 		}
+
 		
 		return result;
 		
