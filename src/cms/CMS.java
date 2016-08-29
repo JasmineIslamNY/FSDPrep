@@ -46,7 +46,8 @@ public class CMS {
 		try 
 		{
 			InputStreamReader	kbd = new InputStreamReader(System.in);	 
-			BufferedReader kbdBuf = new BufferedReader(kbd);		  	         
+			BufferedReader kbdBuf = new BufferedReader(kbd);	
+			BLOGIC bLogic = new BLOGIC();
 
 	      		while(true)
 	      		{
@@ -58,7 +59,8 @@ public class CMS {
 				if (input.equals(""))						
 		      			System.exit(0);
 													
-				System.out.println(input + "\n");
+				System.out.println("Processing: " + input + "\n");
+				System.out.println(bLogic.processor(input));
 
 			
 		      	}									
