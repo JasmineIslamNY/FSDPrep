@@ -26,7 +26,7 @@ public class StringProcessor {
 		result = tokenize(order);
 		
 		//check that the message is not Invalid
-		if (result[0].equals("INVALID_MESSAGE") {
+		if (result[0].equals("INVALID_MESSAGE")) {
 			return result;
 		}
 		
