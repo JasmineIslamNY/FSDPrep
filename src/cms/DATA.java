@@ -8,17 +8,17 @@ public class DATA {
 	static Integer orderCounter = 0;
 	static String [] dealerID = new String[] {"DB", "JPM", "UBS", "RBC", "BARX", "MS", "CITI", "BOFA", "RBS", "HSBC"};
 	static String [] commodity = new String[] {"GOLD", "SILV", "PORK", "OIL", "RICE"};
-	private static HashMap<Integer, String[]> dBase = new HashMap(100);
-	private static HashMap<String, ArrayList<Integer>> dBaseByDealerID = new HashMap(100);
-	private static HashMap<String, ArrayList<Integer>> dBaseByCommodity = new HashMap(100);
+	private static HashMap<String, String[]> dBase = new HashMap(100);
+	private static HashMap<String, ArrayList<String>> dBaseByDealerID = new HashMap(100);
+	private static HashMap<String, ArrayList<String>> dBaseByCommodity = new HashMap(100);
 	
 	public String add(String [] addOrder) {
 		/*Steps to add order:
 		 * 1. Increment orderCounter
 		 * 2. Check commodity to make sure it's in the list
-		 * 3. Add to database HashMap, key is the orderCounter and value is the addOrder Array
-		 * 4. Add orderCounter to the index for DealerID searches - this has three steps of it's own
-		 * 5. Add orderCounter to the index for Commodity searches - this has three steps of it's own
+		 * 3. Add to database HashMap, key is the orderCounterString and value is the addOrder Array
+		 * 4. Add orderCounterString to the index for DealerID searches - this has three steps of it's own
+		 * 5. Add orderCounterString to the index for Commodity searches - this has three steps of it's own
 		 * 6. Craft success message
 		 * 7. If add fails, display stack trace for debugging
 		 * Note - this is the format for the addOrder Array: //addOrder[0] = Dealer_ID, addOrder[1] = Buy|Sell, addOrder[2] = Commodity, addOrder[3] = Amount, addOrder[4] = Price
@@ -26,6 +26,7 @@ public class DATA {
 		String result = "";
 		//Step 1: Increment orderCounter
 		orderCounter += 1;
+		String orderCounterString = String.valueOf(orderCounter);
 
 		//Step 2: Check Commodity to make sure it's in the list
 		if (!(checkCommodity(addOrder[2]))) {
@@ -34,8 +35,8 @@ public class DATA {
 		}
 		
 		try {
-			//Step 3: Add to database HashMap, key is the orderCounter and value is the addOrder Array
-			dBase.put(orderCounter, addOrder);
+			//Step 3: Add to database HashMap, key is the orderCounterString and value is the addOrder Array
+			dBase.put(orderCounterString, addOrder);
 			
 			//Step 4: Add to the DealerID Index
 			/*Add an index to keep track of dealer orders.  It's a hashmap where the key is the DealerID (addOrder[0]) and the  value is a ArrayList of the keys of dBase 
@@ -44,13 +45,13 @@ public class DATA {
 			 * 4c. If it does not exist, create a new ArrayList, add the new orderID to it, and then add a key/value pair to the HashMap
 			 */
 			if (dBaseByDealerID.containsKey(addOrder[0])) {
-				ArrayList<Integer> arrayList = (ArrayList<Integer>) dBaseByDealerID.get(addOrder[0]);
-				arrayList.add(orderCounter);
+				ArrayList<String> arrayList = (ArrayList<String>) dBaseByDealerID.get(addOrder[0]);
+				arrayList.add(orderCounterString);
 				dBaseByDealerID.replace(addOrder[0], arrayList);
 			}
 			else {
-				ArrayList<Integer> arrayList = new ArrayList<Integer>();
-				arrayList.add(orderCounter);
+				ArrayList<String> arrayList = new ArrayList<String>();
+				arrayList.add(orderCounterString);
 				dBaseByDealerID.put(addOrder[0], arrayList);
 			}
 			
@@ -61,18 +62,18 @@ public class DATA {
 			 * 5c. If it does not exist, create a new ArrayList, add the new orderID to it, and then add a key/value pair to the HashMap
 			 */
 			if (dBaseByCommodity.containsKey(addOrder[2])) {
-				ArrayList<Integer> arrayList = (ArrayList<Integer>) dBaseByCommodity.get(addOrder[2]);
-				arrayList.add(orderCounter);
+				ArrayList<String> arrayList = (ArrayList<String>) dBaseByCommodity.get(addOrder[2]);
+				arrayList.add(orderCounterString);
 				dBaseByCommodity.replace(addOrder[2], arrayList);
 			}
 			else {
-				ArrayList<Integer> arrayList = new ArrayList<Integer>();
-				arrayList.add(orderCounter);
+				ArrayList<String> arrayList = new ArrayList<String>();
+				arrayList.add(orderCounterString);
 				dBaseByCommodity.put(addOrder[2], arrayList);
 			}
 			
 			//Step 6. Craft Success message
-			result = orderCounter + " " + addOrder[0] + " " + addOrder[1] + " " + addOrder[2] + " " + addOrder[3] + " " + addOrder[4] + " HAS BEEN POSTED";
+			result = orderCounterString + " " + addOrder[0] + " " + addOrder[1] + " " + addOrder[2] + " " + addOrder[3] + " " + addOrder[4] + " HAS BEEN POSTED";
 		} catch (Exception e) {
 			//Step 7. If add fails, display stacktrace for debug
 			e.printStackTrace();
@@ -83,20 +84,18 @@ public class DATA {
 	public String delete(String orderNumber, String dealerID, String commodity) {
 		String result = "";
 		try {
-			Integer orderNumberInt = Integer.parseInt(orderNumber);
-			
 			//Delete from dealerid index
-			ArrayList<Integer> arrayListDealer = (ArrayList<Integer>) dBaseByDealerID.get(dealerID);
-			arrayListDealer.remove(orderNumberInt);
+			ArrayList<String> arrayListDealer = (ArrayList<String>) dBaseByDealerID.get(dealerID);
+			arrayListDealer.remove(orderNumber);
 			dBaseByDealerID.replace(dealerID, arrayListDealer);
 				
 			//Delete from commodity index
-			ArrayList<Integer> arrayListCommodity = (ArrayList<Integer>) dBaseByCommodity.get(commodity);
-			arrayListCommodity.remove(orderNumberInt);
+			ArrayList<String> arrayListCommodity = (ArrayList<String>) dBaseByCommodity.get(commodity);
+			arrayListCommodity.remove(orderNumber);
 			dBaseByCommodity.replace(commodity, arrayListCommodity);
 				
 			//Delete from Database
-			dBase.remove(orderNumberInt);
+			dBase.remove(orderNumber);
 				
 			//Craft revoked message
 			result = orderNumber + " HAS BEEN REVOKED";
@@ -111,8 +110,7 @@ public class DATA {
 		//Format for the modifyOrder Array: modifyOrder[0] = Dealer_ID, modifyOrder[1] = Buy|Sell, modifyOrder[2] = Commodity, modifyOrder[3] = Amount, modifyOrder[4] = Price
 		String result = "SUCCESS";
 		try {
-			Integer orderNumberInt = Integer.parseInt(orderNumber);
-			dBase.replace(orderNumberInt, modifyOrder);
+			dBase.replace(orderNumber, modifyOrder);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -121,19 +119,19 @@ public class DATA {
 		return result;
 	}
 	
-	public Integer[] retrieveAllOrders () {
-		Integer[] tempAllOrdersArray = (Integer[]) dBase.keySet().toArray();
+	public String[] retrieveAllOrders () {
+		String[] tempAllOrdersArray = (String[]) dBase.keySet().toArray();
 		if (tempAllOrdersArray != null){
 			return tempAllOrdersArray;
 		}
 		else {
-			Integer[] resultArray = new Integer[] {0};
+			String[] resultArray = new String[] {"0"};
 			return resultArray;
 		} 
 	}
 	
 	public String[] retrieveByOrderID (String orderID) {
-		String[] tempOrderArray = (String[]) dBase.get(Integer.parseInt(orderID));
+		String[] tempOrderArray = (String[]) dBase.get(orderID);
 		if (tempOrderArray != null){
 			return tempOrderArray;
 		}
@@ -143,38 +141,43 @@ public class DATA {
 		}
 	}
 	
-	public Integer[] retrieveByDealerID (String dealerID) {
+	public String [] retrieveByDealerID (String dealerID) {
 		if (dBaseByDealerID.containsKey(dealerID)) {
-			ArrayList<Integer> resultList = (ArrayList<Integer>) dBaseByDealerID.get(dealerID);
-			Integer[] resultArray = (Integer[]) resultList.toArray();
+			ArrayList<String> resultList = (ArrayList<String>) dBaseByDealerID.get(dealerID);
+			String[] resultArray = Arrays.copyOf(resultList.toArray(), resultList.toArray().length, String[].class);
 			return resultArray;
 		}
 		else {
-			Integer[] resultArray = new Integer[] {0};
+			String[] resultArray = new String[] {"0"};
 			return resultArray;
 		}
 	}
 	
-	public Integer[] retrieveByCommodity (String commodity) {
+	public String [] retrieveByCommodity (String commodity) {
 		if (dBaseByCommodity.containsKey(commodity)) {
-			ArrayList<Integer> resultList = (ArrayList<Integer>) dBaseByCommodity.get(commodity);
-			Integer[] resultArray = (Integer[]) resultList.toArray();
+			ArrayList<String> resultList = (ArrayList<String>) dBaseByCommodity.get(commodity);
+			String[] resultArray = Arrays.copyOf(resultList.toArray(), resultList.toArray().length, String[].class);
 			return resultArray;
 		}
 		else {
-			Integer[] resultArray = new Integer[] {0};
+			String[] resultArray = new String[] {"0"};
 			return resultArray;
 		}
 	}
 	
-	public Integer[] retriveByCmdtyAndDlr (String commodity, String dealerID) {
+	public String [] retriveByCmdtyAndDlr (String commodity, String dealerID) {
 		//Could not find a more efficient way of doing this :( - good thing is this is a sorted array
-		Integer[] tempArraySmall;
-		Integer[] tempArrayLarge;
+		String[] tempArraySmall;
+		String[] tempArrayLarge;
 		
-		Integer[] byCommodityArray = retrieveByCommodity(commodity);
-		Integer[] byDealerArray = retrieveByDealerID(dealerID);
+		String[] byCommodityArray = retrieveByCommodity(commodity);
+		String[] byDealerArray = retrieveByDealerID(dealerID);
 		
+		//Check for empty array from either commodity/dealer
+		if (byCommodityArray[0].equals("0") || byDealerArray[0].equals("0")) {
+				String[] resultArray = new String[] {"0"};
+				return resultArray;
+			}
 		//Check which array is smaller, that's the one we'll loop
 		if (byCommodityArray.length < byDealerArray.length) {
 			tempArraySmall = byCommodityArray;
@@ -186,7 +189,7 @@ public class DATA {
 		}
 		
 		//construct arraylist with initial size of smaller temparray - to add orderIDs that exist in both arrays
-		ArrayList<Integer> tempResultList = new ArrayList<Integer>(tempArraySmall.length);  
+		ArrayList<String> tempResultList = new ArrayList<String>(tempArraySmall.length);  
 		
 		//do a binary search on the larger array 
 		for (int i=0; i < tempArraySmall.length; i++) {
@@ -196,8 +199,13 @@ public class DATA {
 			}
 		}
 		
-		//create an integer array from temp arraylist
-		Integer[] resultArray = (Integer[]) tempResultList.toArray();
+		//check for empty result set
+		if (tempResultList.size() == 0) {
+			String[] resultArray = new String[] {"0"};
+			return resultArray;
+		}
+		//create an String array from temp arraylist
+		String[] resultArray = (String[]) tempResultList.toArray();
 		return resultArray;
 	}
 	
@@ -211,7 +219,7 @@ public class DATA {
 		return result;
 	}
 	
-	public boolean checkCommodity (String cmdty) {
+	public static boolean checkCommodity (String cmdty) {
 		boolean result = false;
 		for (int i=0; i < commodity.length; i++) {
 			if (commodity[i].equals(cmdty)) {

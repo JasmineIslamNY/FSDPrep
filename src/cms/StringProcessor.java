@@ -10,7 +10,7 @@ public class StringProcessor {
 		 * This class processes the string command entered by a user/system.  
 		 * It checks the command for size (255 or less) 
 		 * Breaks it into component pieces
-		 * Checks that tokens are between 3 and 6
+		 * Checks that tokens are between 2 and 6
 		 * Checks that the dealer sending the request is valid
 		 * Uses try/catch to test convert price and amount 
 		 * Returns String array to caller
@@ -84,7 +84,7 @@ public class StringProcessor {
 		StringTokenizer tok = new StringTokenizer(order);
 		int numberOfTokens = tok.countTokens();
 		//check in the case that tokens are between 3 and 6
-		if (numberOfTokens < 3 || numberOfTokens > 6) {
+		if (numberOfTokens < 2 || numberOfTokens > 6) {
 			tempResult = new String[] {"INVALID_MESSAGE", "Command not formatted correctly"};
 		}
 		else {
