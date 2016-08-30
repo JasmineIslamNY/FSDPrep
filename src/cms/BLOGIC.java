@@ -1,7 +1,10 @@
 package cms;
 
+import java.util.ArrayList;
+
 public class BLOGIC {
 	protected static String [] availableCommands = {"POST", "REVOKE", "CHECK", "LIST", "AGGRESS"};
+	//Initialize DATA for the datastorage
 	DATA dStore = new DATA();
 
 	public String processor(String order) {
@@ -20,10 +23,8 @@ public class BLOGIC {
 		StringProcessor sp = new StringProcessor();
 		String [] resultArray = sp.process(order);
 		
-		//Initialize DATA for the datastorage
-		
 		//Check for error and report back to user if needed
-		if (resultArray[0].equals("INVALID_MESSAGE")) {
+		if (resultArray[0].equals("INVALID_MESSAGE") || resultArray[0].equals("UNAUTHORIZED")) {
 			result = resultArray[0] + ": " + resultArray[1] + "\n";
 			return result;
 		}
@@ -62,10 +63,35 @@ public class BLOGIC {
 		return tempString;
 	}
 	private String processRevoke(String [] resultArray) {
-		String tempString = "";
-		
-		return tempString;
-	}	
+		String result = "";
+		/*Steps to revoke order:
+		 * 1. Retrieve order from dBase
+		 * 2. Check if order exists, error message if it doesn't
+		 * 3. Confirm dealer making the request is the dealer who created it
+		 * 4. Delete from database (this includes the success message)
+		 * Note: format of resultArray - resultArray[0] = Dealer_ID, resultArray[1] = REVOKE, resultArray[2] = OrderID
+		 * Note: format of order - order[0] = Dealer_ID, order[2] = Buy|Sell, order[3] = Commodity, order[4] = Amount, order[5] = Price
+		*/
+		//Step 1: Retrieve order from dBase
+		String[] order = (String[]) dStore.retrieveByOrderID(resultArray[2]);
+		//Step 2: Check if order exists - error message if it doesn't
+		if (order[0].equals("UNKNOWN_ORDER")) {
+			result = "UNKNOWN_ORDER";
+			return result;
+			}
+		else {
+			//Step 3: Confirm dealer is authorized - error message if not
+			if (!(resultArray[0].equals(order[0]))) {
+				result = "UNAUTHORIZED: Only the dealer who created the order can Revoke";
+				return result;
+				}
+			else {
+				//Step 4: Delete from database
+				result	= dStore.delete(resultArray[2], order[0], order[3]);
+				}
+		}	
+		return result;
+	}
 	private String processCheck(String [] resultArray) {
 		String tempString = "";
 		
@@ -78,6 +104,13 @@ public class BLOGIC {
 	}	
 	private String processAggress(String [] resultArray) {
 		String tempString = "";
+		
+		if (modifyOrder[1].equals("BUY")) {
+			String Action = "SOLD";
+		}
+		else if (modifyOrder[1].equals("SELL")) {
+			String Action = "BOUGHT";
+		}
 		
 		return tempString;
 	}
