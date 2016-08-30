@@ -56,6 +56,12 @@ public class BLOGIC {
 	}
 	
 	private String processPost(String [] resultArray) {
+		/*Steps to add order:
+		 * 1. Create a new array from resultArray (which is the command user input) by removing the Command (POST) from it 
+		 * 2. Send this to DATA as using the add method
+		 * 3. DATA will respond with the POST_CONFIRMATION message (or error message if it's an unknown commodity or there is a save error)
+		 * 4. Pass message to calling method
+		 */
 		String tempString = "";
 		//resultArray[0] = Dealer_ID, resultArray[2] = Buy|Sell, resultArray[3] = Commodity, resultArray[4] = Amount, resultArray[5] = Price
 		String [] addOrder = {resultArray[0], resultArray[2], resultArray[3], resultArray[4], resultArray[5]};

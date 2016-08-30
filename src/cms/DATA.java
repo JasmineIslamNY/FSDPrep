@@ -71,7 +71,7 @@ public class DATA {
 			}
 			
 			//Step 6. Craft Success message
-			result = orderCounter + " " + addOrder[0] + " " + addOrder[1] + " " + addOrder[2] + " " + addOrder[3] + " " + addOrder[4] + "HAS BEEN POSTED \n";
+			result = orderCounter + " " + addOrder[0] + " " + addOrder[1] + " " + addOrder[2] + " " + addOrder[3] + " " + addOrder[4] + " HAS BEEN POSTED \n";
 		} catch (Exception e) {
 			//Step 7. If add fails, display stacktrace for debug
 			e.printStackTrace();
