@@ -60,7 +60,7 @@ public class CMS {
 		      			System.exit(0);
 													
 				System.out.println("Processing: " + input + "\n");
-				System.out.println(bLogic.processor(input));
+				System.out.println(bLogic.processor(input) + "\n");
 
 			
 		      	}									

@@ -28,7 +28,7 @@ public class DATA {
 
 		//Step 2: Check Commodity to make sure it's in the list
 		if (!(checkCommodity(addOrder[2]))) {
-			result = "UNKNOWN_COMMODITY \n";
+			result = "UNKNOWN_COMMODITY";
 			return result;
 		}
 		
@@ -71,7 +71,7 @@ public class DATA {
 			}
 			
 			//Step 6. Craft Success message
-			result = orderCounter + " " + addOrder[0] + " " + addOrder[1] + " " + addOrder[2] + " " + addOrder[3] + " " + addOrder[4] + " HAS BEEN POSTED \n";
+			result = orderCounter + " " + addOrder[0] + " " + addOrder[1] + " " + addOrder[2] + " " + addOrder[3] + " " + addOrder[4] + " HAS BEEN POSTED";
 		} catch (Exception e) {
 			//Step 7. If add fails, display stacktrace for debug
 			e.printStackTrace();
@@ -98,7 +98,7 @@ public class DATA {
 			dBase.remove(orderNumberInt);
 				
 			//Craft revoked message
-			result = orderNumber + "HAS BEEN REVOKED \n";
+			result = orderNumber + " HAS BEEN REVOKED";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -115,7 +115,7 @@ public class DATA {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			result = "ERROR";
+			result = "UNKNOWN_ERROR";
 		}
 		return result;
 	}

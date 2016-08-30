@@ -25,7 +25,7 @@ public class BLOGIC {
 		
 		//Check for error and report back to user if needed
 		if (resultArray[0].equals("INVALID_MESSAGE") || resultArray[0].equals("UNAUTHORIZED")) {
-			result = resultArray[0] + ": " + resultArray[1] + "\n";
+			result = resultArray[0] + ": " + resultArray[1];
 			return result;
 		}
 		
@@ -62,21 +62,21 @@ public class BLOGIC {
 		 * 3. DATA will respond with the POST_CONFIRMATION message (or error message if it's an unknown commodity or there is a save error)
 		 * 4. Pass message to calling method
 		 */
-		String tempString = "";
+		String result = "";
 		//resultArray[0] = Dealer_ID, resultArray[2] = Buy|Sell, resultArray[3] = Commodity, resultArray[4] = Amount, resultArray[5] = Price
 		String [] addOrder = {resultArray[0], resultArray[2], resultArray[3], resultArray[4], resultArray[5]};
-		tempString = dStore.add(addOrder);
-		return tempString;
+		result = dStore.add(addOrder);
+		return result;
 	}
 	private String processRevoke(String [] resultArray) {
 		String result = "";
 		/*Steps to revoke order:
 		 * 1. Retrieve order from dBase
 		 * 2. Check if order exists, error message if it doesn't
-		 * 3. Confirm dealer making the request is the dealer who created it
+		 * 3. Confirm dealer making the request is the dealer who created it - error message if not
 		 * 4. Delete from database (this includes the success message)
 		 * Note: format of resultArray - resultArray[0] = Dealer_ID, resultArray[1] = REVOKE, resultArray[2] = OrderID
-		 * Note: format of order - order[0] = Dealer_ID, order[2] = Buy|Sell, order[3] = Commodity, order[4] = Amount, order[5] = Price
+		 * Note: format of order - order[0] = Dealer_ID, order[1] = Buy|Sell, order[2] = Commodity, order[3] = Amount, order[4] = Price
 		*/
 		//Step 1: Retrieve order from dBase
 		String[] order = (String[]) dStore.retrieveByOrderID(resultArray[2]);
@@ -93,16 +93,53 @@ public class BLOGIC {
 				}
 			else {
 				//Step 4: Delete from database
-				result	= dStore.delete(resultArray[2], order[0], order[3]);
+				result	= dStore.delete(resultArray[2], order[0], order[2]);
 				}
 		}	
 		return result;
 	}
 	private String processCheck(String [] resultArray) {
-		String tempString = "";
-		
-		return tempString;
-	}	
+		String result = "";
+		/*Steps to check order:
+		 * 1. Retrieve order from dBase
+		 * 2. Check if order exists, error message if it doesn't
+		 * 3. Confirm dealer making the request is the dealer who created it - error message if not
+		 * 4. Check Amount
+		 * 4a. If Amount > 0, send an ORDER_INFO Message
+		 * 4b. If Amount = 0, send a FILLED message 
+		 * Note: format of resultArray - resultArray[0] = Dealer_ID, resultArray[1] = CHECK, resultArray[2] = OrderID
+		 * Note: format of order - order[0] = Dealer_ID, order[1] = Buy|Sell, order[2] = Commodity, order[3] = Amount, order[4] = Price
+		*/
+		//Step 1: Retrieve order from dBase
+		String[] order = (String[]) dStore.retrieveByOrderID(resultArray[2]);
+		//Step 2: Check if order exists - error message if it doesn't
+		if (order[0].equals("UNKNOWN_ORDER")) {
+			result = "UNKNOWN_ORDER";
+			return result;
+			}
+		else {
+			//Step 3: Confirm dealer is authorized - error message if not
+			if (!(resultArray[0].equals(order[0]))) {
+				result = "UNAUTHORIZED: Only the dealer who created the order can Revoke";
+				return result;
+				}
+			else {
+				//Step 4a: If Amount > 0, send an ORDER_INFO message
+				if (Integer.parseInt(order[3]) > 0) {
+					result = resultArray[2] + " " + resultArray[0] + " " + order[1] + " " + order[2] + " " + order[3] + " " + order[4]; 
+					}
+				//Step 4b: If Amount = 0, send a FILLED message
+				else if (Integer.parseInt(order[3]) == 0) {
+					result = resultArray[2] + " HAS BEEN FILLED";
+					}
+				else {
+					result = "UNKNOWN_ERROR";
+					}
+				}
+				}	
+		return result;
+		}	
+	
 	private String processList(String [] resultArray) {
 		String tempString = "";
 		
