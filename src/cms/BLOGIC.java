@@ -88,7 +88,7 @@ public class BLOGIC {
 		else {
 			//Step 3: Confirm dealer is authorized - error message if not
 			if (!(resultArray[0].equals(order[0]))) {
-				result = "UNAUTHORIZED: Only the dealer who created the order can Revoke";
+				result = "UNAUTHORIZED: Only the dealer who created the order can REVOKE";
 				return result;
 				}
 			else {
@@ -120,7 +120,53 @@ public class BLOGIC {
 		else {
 			//Step 3: Confirm dealer is authorized - error message if not
 			if (!(resultArray[0].equals(order[0]))) {
-				result = "UNAUTHORIZED: Only the dealer who created the order can Revoke";
+				result = "UNAUTHORIZED: Only the dealer who created the order can CHECK";
+				return result;
+				}
+			else {
+				//Step 4a: If Amount > 0, create an ORDER_INFO message
+				if (Integer.parseInt(order[3]) > 0) {
+					result = resultArray[2] + " " + resultArray[0] + " " + order[1] + " " + order[2] + " " + order[3] + " " + order[4]; 
+					}
+				//Step 4b: If Amount = 0, create a FILLED message
+				else if (Integer.parseInt(order[3]) == 0) {
+					result = resultArray[2] + " HAS BEEN FILLED";
+					}
+				else {
+					result = "UNKNOWN_ERROR";
+					}
+				}
+				}	
+		return result;
+		}	
+	
+	private String processList(String [] resultArray) {
+		String result = "";
+		/*Steps to check order:
+		 * 1. Check Command to see if there are optional arguments
+		 * 1a. If no arguments, call retrieveAllOrders() from DATA
+		 * 1b. If Commodity, call retrieveByCommodity() from DATA
+		 * 1c. If Dealer, call retrieveByDealerID() from DATA
+		 * 2. Create a string called ORDER_INFO_LIST
+		 * 3. All three return an integer array with Order IDs - loop through this array
+		 * 3a. For each order id, call retrieveByOrderID()
+		 * 3b. Check if "UNKNOWN_ORDER" message returned - append to ORDER_INFO_LIST as well
+		 * 3c. Else create an ORDER_INFO message and append to ORDER_INFO_LIST message
+		 * 3d. When loop finished, append " END OF LIST" to ORDER_INFO_LIST
+		 * Note: format of resultArray - resultArray[0] = Dealer_ID, resultArray[1] = LIST, resultArray[2] = COMMODITY|DEALER (optional)
+		 * Note: format of order - order[0] = Dealer_ID, order[1] = Buy|Sell, order[2] = Commodity, order[3] = Amount, order[4] = Price
+		*/
+		//Step 1: Retrieve order from dBase
+		String[] order = (String[]) dStore.retrieveByOrderID(resultArray[2]);
+		//Step 2: Check if order exists - error message if it doesn't
+		if (order[0].equals("UNKNOWN_ORDER")) {
+			result = "UNKNOWN_ORDER";
+			return result;
+			}
+		else {
+			//Step 3: Confirm dealer is authorized - error message if not
+			if (!(resultArray[0].equals(order[0]))) {
+				result = "UNAUTHORIZED: Only the dealer who created the order can CHECK";
 				return result;
 				}
 			else {
@@ -139,12 +185,6 @@ public class BLOGIC {
 				}	
 		return result;
 		}	
-	
-	private String processList(String [] resultArray) {
-		String tempString = "";
-		
-		return tempString;
-	}	
 	private String processAggress(String [] resultArray) {
 		String tempString = "";
 		
