@@ -1,6 +1,7 @@
 package cms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class DATA {
@@ -164,6 +165,40 @@ public class DATA {
 			Integer[] resultArray = new Integer[] {0};
 			return resultArray;
 		}
+	}
+	
+	public Integer[] retriveByCmdtyAndDlr (String commodity, String dealerID) {
+		//Could not find a more efficient way of doing this :( - good thing is this is a sorted array
+		Integer[] tempArraySmall;
+		Integer[] tempArrayLarge;
+		
+		Integer[] byCommodityArray = retrieveByCommodity(commodity);
+		Integer[] byDealerArray = retrieveByDealerID(dealerID);
+		
+		//Check which array is smaller, that's the one we'll loop
+		if (byCommodityArray.length < byDealerArray.length) {
+			tempArraySmall = byCommodityArray;
+			tempArrayLarge = byDealerArray;
+		}
+		else {
+			tempArraySmall = byDealerArray;
+			tempArrayLarge = byCommodityArray;
+		}
+		
+		//construct arraylist with initial size of smaller temparray - to add orderIDs that exist in both arrays
+		ArrayList<Integer> tempResultList = new ArrayList<Integer>(tempArraySmall.length);  
+		
+		//do a binary search on the larger array 
+		for (int i=0; i < tempArraySmall.length; i++) {
+			int match = Arrays.binarySearch(tempArrayLarge, tempArraySmall[i]);
+			if (match >= 0) {
+				tempResultList.add(tempArraySmall[i]);
+			}
+		}
+		
+		//create an integer array from temp arraylist
+		Integer[] resultArray = (Integer[]) tempResultList.toArray();
+		return resultArray;
 	}
 	
 	public static boolean checkDealerID (String dealer) {

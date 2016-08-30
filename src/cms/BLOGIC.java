@@ -147,6 +147,7 @@ public class BLOGIC {
 		 * 1a. If no arguments, call retrieveAllOrders() from DATA
 		 * 1b. If Commodity, call retrieveByCommodity() from DATA
 		 * 1c. If Dealer, call retrieveByDealerID() from DATA
+		 * 1d. If Commodity and Dealer, call retriveByCmdtyAndDlr() from DATA
 		 * 2. Create a string called ORDER_INFO_LIST
 		 * 3. All three return an integer array with Order IDs - loop through this array
 		 * 3a. For each order id, call retrieveByOrderID()
