@@ -132,13 +132,12 @@ public class DATA {
 	
 	public ArrayList<String> retrieveAllOrders () {
 		String[] tempAllOrdersArray = Arrays.copyOf(dBase.keySet().toArray(), (dBase.keySet().toArray().length), String[].class);
-		if (tempAllOrdersArray != null){
-			ArrayList<String> resultList = new ArrayList<String>(Arrays.asList(tempAllOrdersArray));
+		ArrayList<String> resultList = new ArrayList<String>(Arrays.asList(tempAllOrdersArray));
+		if (resultList.isEmpty()){
+			resultList.add("0");
 			return resultList;
 		}
 		else {
-			ArrayList<String> resultList = new ArrayList<String>(1);
-			resultList.add("0");
 			return resultList;
 		} 
 	}

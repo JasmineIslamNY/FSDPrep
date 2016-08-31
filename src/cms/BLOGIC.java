@@ -198,7 +198,7 @@ public class BLOGIC {
 		String result = "";
 		//Step 2. Check if a result set is empty
 		if (aList.get(0).equals("0")) {
-			result = "UNKNOWN_ORDER: No orders found";
+			result = "UNKNOWN_ORDER: No order found \n";
 			return result;
 		}
 				
