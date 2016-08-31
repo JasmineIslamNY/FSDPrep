@@ -240,7 +240,8 @@ public class BLOGIC {
 		//Step 3. Check Amount from outstanding order and complete order/error message
 		else {
 			if (Integer.parseInt(resultArray[3]) <= Integer.parseInt(order[3])){
-				String[] modifyOrder = {order[0], order[1], order[2], (String.valueOf(Integer.parseInt(order[3]) - Integer.parseInt(resultArray[3]))), order[4]};
+				Integer newAmount = Integer.parseInt(order[3]) - Integer.parseInt(resultArray[3]);
+				String[] modifyOrder = {order[0], order[1], order[2], (String.valueOf(newAmount)), order[4]};
 				String tempResult = dStore.modify(resultArray[2], modifyOrder);
 				if (tempResult.equals("SUCCESS")){
 					//create TRADE_REPORT - ACTION AMOUNT COMMODITY “@” PRICE “FROM” DEALER_ID
@@ -251,16 +252,19 @@ public class BLOGIC {
 					else if (order[1].equals("SELL")) {
 						Action = "BOUGHT";
 					}
+					result = Action + " " +  resultArray[3] + " " + order[2] + " @ " +  order[4] + " FROM " + order[0];
 				}
+				else {
+					//create ERROR message
+					result = "UNKNOWN_ERROR";
+				}
+			}
+			else {
+				//create ERROR message
+				result = "UNAUTHORIZED - amount requested is larger than amount available";
 			}
 		}	
 		return result;
-		
-		
-		
-		
-		
-		return tempString;
 	}
 
 }
