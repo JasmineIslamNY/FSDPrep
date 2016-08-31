@@ -143,39 +143,41 @@ public class BLOGIC {
 	
 	private String processList(String [] resultArray) {
 		String result = "";
-		String [] retrievedOrderIDs = null;
 		/*Steps to check order:
 		 * 1. Check Command to see if there are optional arguments
 		 * 1a. If no arguments, call retrieveAllOrders() from DATA
 		 * 1b. If Commodity, call retrieveByCommodity() from DATA
 		 * 1c. If Dealer, call retrieveByDealerID() from DATA
 		 * 1d. If Commodity and Dealer, call retriveByCmdtyAndDlr() from DATA
+		 * ***********************************************
+		 * In createOrderInfoList()
 		 * 2. Check if a result set is empty
 		 * 3. All methods return an integer array with Order IDs - loop through this array
 		 * 3a. For each order id, call retrieveByOrderID()
 		 * 3b. Check if "UNKNOWN_ORDER" message returned - append to ORDER_INFO_LIST (result) as well
 		 * 3c. Else create an ORDER_INFO message and append to ORDER_INFO_LIST (result) message
+		 * ***********************************************
 		 * 4. When loop finished, append " END OF LIST" to ORDER_INFO_LIST (result)
 		 * Note: format of resultArray - resultArray[0] = Dealer_ID, resultArray[1] = LIST, resultArray[2] = Commodity|Dealer_ID (optional), resultArray[3] = Dealer_ID (optional)
 		 * Note: format of order - order[0] = Dealer_ID, order[1] = Buy|Sell, order[2] = Commodity, order[3] = Amount, order[4] = Price
 		*/
 		//Step 1: Check command and call proper method
 		if (resultArray.length == 2) {
-			String[] tempRetrievedOrderIDs = (String []) dStore.retrieveAllOrders();
-			retrievedOrderIDs = tempRetrievedOrderIDs;
+			ArrayList<String> resultList = dStore.retrieveAllOrders();
+			result = createOrderInfoList(resultList);
 		}
 		else if (resultArray.length == 4) {
-			String[] tempRetrievedOrderIDs = (String []) dStore.retriveByCmdtyAndDlr(resultArray[2], resultArray[3]);
-			retrievedOrderIDs = tempRetrievedOrderIDs;
+			ArrayList<String> resultList = dStore.retriveByCmdtyAndDlr(resultArray[2], resultArray[3]);
+			result = createOrderInfoList(resultList);
 		}
 		else if (resultArray.length == 3) {
 			if (DATA.checkCommodity(resultArray[2])) {
-				String[] tempRetrievedOrderIDs = (String []) dStore.retrieveByCommodity(resultArray[2]);
-				retrievedOrderIDs = tempRetrievedOrderIDs;
+				ArrayList<String> resultList = dStore.retrieveByCommodity(resultArray[2]);
+				result = createOrderInfoList(resultList);
 			}
 			else if (DATA.checkDealerID(resultArray[2])) {
-				String[] tempRetrievedOrderIDs = (String []) dStore.retrieveByDealerID(resultArray[2]);
-				retrievedOrderIDs = tempRetrievedOrderIDs;
+				ArrayList<String> resultList = dStore.retrieveByDealerID(resultArray[2]);
+				result = createOrderInfoList(resultList);
 			}
 		}
 		else {
@@ -183,28 +185,32 @@ public class BLOGIC {
 			return result;
 		}
 		
-		//Step 2. Check if a result set is empty
-		if (retrievedOrderIDs[0].equals("0")) {
-			result = "UNKNOWN_ORDER: No orders found";
-			return result;
-		}
-		
-		//Step 3. All methods return an integer array with Order IDs - loop through this array
-		for (int i=0; i <= retrievedOrderIDs.length; i++){
-			String[] order = (String[]) dStore.retrieveByOrderID(retrievedOrderIDs[i]);
-			if (order.length == 1){
-				result = result + retrievedOrderIDs[i] + order[0];
-			}
-			else {
-			result = result + retrievedOrderIDs[i] + " " + order[0] + " " + order[1] + " " + order[2] + " " + order[3] + " " + order[4] + "\n"; 
-			}
-		}
-		
 		//Step 4. When loop finished, append " END OF LIST" to ORDER_INFO_LIST (result)
-		result = result + " END OF LIST";
+		result = result + "END OF LIST \n";
 		return result;
 		}	
 	
+	private String createOrderInfoList (ArrayList<String> aList){
+		// Note: format of order - order[0] = Dealer_ID, order[1] = Buy|Sell, order[2] = Commodity, order[3] = Amount, order[4] = Price
+		String result = "";
+		//Step 2. Check if a result set is empty
+		if (aList.get(0).equals("0")) {
+			result = "UNKNOWN_ORDER: No orders found";
+			return result;
+		}
+				
+		//Step 3. All methods return an integer arraylist with Order IDs - loop through this arraylist
+		for (int i=0; i < aList.size(); i++){
+			String[] order = (String[]) dStore.retrieveByOrderID(aList.get(i));
+			if (order.length == 1){
+				result = result + aList.get(i) + " " + order[0] + "\n";
+			}
+			else {
+			result = result + aList.get(i) + " " + order[0] + " " + order[1] + " " + order[2] + " " + order[3] + " " + order[4] + "\n"; 
+			}
+		}
+		return result;
+	}
 	
 	private String processAggress(String [] resultArray) {
 		String tempString = "";

@@ -119,17 +119,6 @@ public class DATA {
 		return result;
 	}
 	
-	public String[] retrieveAllOrders () {
-		String[] tempAllOrdersArray = (String[]) dBase.keySet().toArray();
-		if (tempAllOrdersArray != null){
-			return tempAllOrdersArray;
-		}
-		else {
-			String[] resultArray = new String[] {"0"};
-			return resultArray;
-		} 
-	}
-	
 	public String[] retrieveByOrderID (String orderID) {
 		String[] tempOrderArray = (String[]) dBase.get(orderID);
 		if (tempOrderArray != null){
@@ -141,72 +130,99 @@ public class DATA {
 		}
 	}
 	
-	public String [] retrieveByDealerID (String dealerID) {
+	public ArrayList<String> retrieveAllOrders () {
+		String[] tempAllOrdersArray = (String[]) dBase.keySet().toArray();
+		if (tempAllOrdersArray != null){
+			ArrayList<String> resultList = new ArrayList<String>(Arrays.asList(tempAllOrdersArray));
+			return resultList;
+		}
+		else {
+			//String[] resultArray = new String[] {"0"};
+			//return resultArray;
+			ArrayList<String> resultList = new ArrayList<String>(1);
+			resultList.add("0");
+			return resultList;
+		} 
+	}
+	
+	public ArrayList<String> retrieveByDealerID (String dealerID) {
 		if (dBaseByDealerID.containsKey(dealerID)) {
 			ArrayList<String> resultList = (ArrayList<String>) dBaseByDealerID.get(dealerID);
-			String[] resultArray = Arrays.copyOf(resultList.toArray(), resultList.toArray().length, String[].class);
-			return resultArray;
+			//String[] resultArray = Arrays.copyOf(resultList.toArray(), resultList.toArray().length, String[].class);
+			//return resultArray;
+			return resultList;
 		}
 		else {
-			String[] resultArray = new String[] {"0"};
-			return resultArray;
+			//String[] resultArray = new String[] {"0"};
+			//return resultArray;
+			ArrayList<String> resultList = new ArrayList<String>(1);
+			resultList.add("0");
+			return resultList;
 		}
 	}
 	
-	public String [] retrieveByCommodity (String commodity) {
+	public ArrayList<String> retrieveByCommodity (String commodity) {
 		if (dBaseByCommodity.containsKey(commodity)) {
 			ArrayList<String> resultList = (ArrayList<String>) dBaseByCommodity.get(commodity);
-			String[] resultArray = Arrays.copyOf(resultList.toArray(), resultList.toArray().length, String[].class);
-			return resultArray;
+			//String[] resultArray = Arrays.copyOf(resultList.toArray(), resultList.toArray().length, String[].class);
+			//return resultArray;
+			return resultList;
 		}
 		else {
-			String[] resultArray = new String[] {"0"};
-			return resultArray;
+			//String[] resultArray = new String[] {"0"};
+			//return resultArray;
+			ArrayList<String> resultList = new ArrayList<String>(1);
+			resultList.add("0");
+			return resultList;
 		}
 	}
 	
-	public String [] retriveByCmdtyAndDlr (String commodity, String dealerID) {
-		//Could not find a more efficient way of doing this :( - good thing is this is a sorted array
-		String[] tempArraySmall;
-		String[] tempArrayLarge;
+	public ArrayList<String> retriveByCmdtyAndDlr (String commodity, String dealerID) {
+		//Could not find a more efficient way of doing this :( - good thing is this is sorted
+		ArrayList<String> tempArrayListSmall;
+		ArrayList<String> tempArrayListLarge;
 		
-		String[] byCommodityArray = retrieveByCommodity(commodity);
-		String[] byDealerArray = retrieveByDealerID(dealerID);
+		ArrayList<String> byCommodityArrayList = retrieveByCommodity(commodity);
+		ArrayList<String> byDealerArrayList = retrieveByDealerID(dealerID);
 		
 		//Check for empty array from either commodity/dealer
-		if (byCommodityArray[0].equals("0") || byDealerArray[0].equals("0")) {
-				String[] resultArray = new String[] {"0"};
-				return resultArray;
+		if ((byCommodityArrayList.get(0).equals("0")) || (byDealerArrayList.get(0).equals("0"))) {
+				//String[] resultArray = new String[] {"0"};
+				//return resultArray;
+			ArrayList<String> resultList = new ArrayList<String>(1);
+			resultList.add("0");
+			return resultList;
 			}
 		//Check which array is smaller, that's the one we'll loop
-		if (byCommodityArray.length < byDealerArray.length) {
-			tempArraySmall = byCommodityArray;
-			tempArrayLarge = byDealerArray;
+		if (byCommodityArrayList.size() < byDealerArrayList.size()) {
+			tempArrayListSmall = byCommodityArrayList;
+			tempArrayListLarge = byDealerArrayList;
 		}
 		else {
-			tempArraySmall = byDealerArray;
-			tempArrayLarge = byCommodityArray;
+			tempArrayListSmall = byDealerArrayList;
+			tempArrayListLarge = byCommodityArrayList;
 		}
 		
-		//construct arraylist with initial size of smaller temparray - to add orderIDs that exist in both arrays
-		ArrayList<String> tempResultList = new ArrayList<String>(tempArraySmall.length);  
+		//construct arraylist with initial size of smaller temparraylist - to add orderIDs that exist in both arrays
+		ArrayList<String> resultList = new ArrayList<String>(tempArrayListSmall.size());  
 		
-		//do a binary search on the larger array 
-		for (int i=0; i < tempArraySmall.length; i++) {
-			int match = Arrays.binarySearch(tempArrayLarge, tempArraySmall[i]);
-			if (match >= 0) {
-				tempResultList.add(tempArraySmall[i]);
+		//do a search on the larger arraylist
+		for (int i=0; i < tempArrayListSmall.size(); i++) {
+			boolean match = tempArrayListLarge.contains(tempArrayListSmall.get(i));
+			if (match = true) {
+				resultList.add(tempArrayListSmall.get(i));
 			}
 		}
 		
 		//check for empty result set
-		if (tempResultList.size() == 0) {
-			String[] resultArray = new String[] {"0"};
-			return resultArray;
+		if (resultList.size() == 0) {
+			//String[] resultArray = new String[] {"0"};
+			//return resultArray;
+			resultList.add("0");
+			return resultList;
 		}
 		//create an String array from temp arraylist
-		String[] resultArray = (String[]) tempResultList.toArray();
-		return resultArray;
+		return resultList;
 	}
 	
 	public static boolean checkDealerID (String dealer) {
