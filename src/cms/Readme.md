@@ -29,3 +29,4 @@ Build/Run: download jar file and expand
 		- confirm cms folder is visible on ls/dir
 		- java cms.CMS
 	
+	
