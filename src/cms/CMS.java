@@ -25,9 +25,9 @@ public class CMS {
 			processKeyboardInput();
 		}
 		else if (args[0].equals("ext1")) {
-			System.out.println("Selected ext1 \n");
-			processSingleTCPConnection();
-			//System.exit(1);
+			System.out.println("ext1 has not been implemented yet \n");
+			//processSingleTCPConnection();
+			System.exit(1);
 		}
 		else if (args[0].equals("ext2")) {
 			System.out.println("ext2 has not been implemented yet \n");
@@ -76,19 +76,26 @@ public class CMS {
         
         try {
 			ServerSocket welcomeSocket = new ServerSocket(6789);
-
-			while(true)
-			{
-			   Socket connectionSocket = welcomeSocket.accept();
-			   BufferedReader inFromClient =
+			Socket connectionSocket = welcomeSocket.accept();
+			
+			BufferedReader inFromClient =
 			      new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-			   DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-			   
-			   outToClient.writeBytes("Thank you for using the Commodity Market System (CMS) \n");
-			   outToClient.writeBytes("Enter command and press enter: (or enter to quit) \n");
-			   
+			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+			
+			int j = 0;
+			while (j == 0) {
+				if (connectionSocket.isConnected()) {
+					outToClient.writeBytes("Thank you for using the Commodity Market System (CMS) \n");
+					outToClient.writeBytes("Enter command and press enter: (or enter to quit) \n");
+					j = 1;
+				}
+			}
+			
+
+			while(true) {
 			   clientSentence = inFromClient.readLine();
 			   System.out.println("Received: " + clientSentence);
+			   
 			   if (clientSentence.equals("")) {	
 				   welcomeSocket.close();
 				   System.exit(0);

@@ -1,5 +1,3 @@
-package cms;
-
 import java.io.*;
 import java.net.*;
 
@@ -16,10 +14,11 @@ class TCPClient {
 		
 		while (true) {
 			sentence = inFromUser.readLine();
+			System.out.println("Processing: " + sentence + "\n");
 			
-			if (sentence.equals("")) {						
+			if (sentence.equals("")) {	
+				clientSocket.close();
       			System.exit(0);
-      			clientSocket.close();
 			}
 			
 			outToServer.writeBytes(sentence + '\n');
