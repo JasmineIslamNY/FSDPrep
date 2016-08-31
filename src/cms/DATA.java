@@ -131,7 +131,7 @@ public class DATA {
 	}
 	
 	public ArrayList<String> retrieveAllOrders () {
-		String[] tempAllOrdersArray = (String[]) dBase.keySet().toArray();
+		String[] tempAllOrdersArray = Arrays.copyOf(dBase.keySet().toArray(), (dBase.keySet().toArray().length), String[].class);
 		if (tempAllOrdersArray != null){
 			ArrayList<String> resultList = new ArrayList<String>(Arrays.asList(tempAllOrdersArray));
 			return resultList;
@@ -174,6 +174,10 @@ public class DATA {
 		
 		ArrayList<String> byCommodityArrayList = retrieveByCommodity(commodity);
 		ArrayList<String> byDealerArrayList = retrieveByDealerID(dealerID);
+		System.out.println("Printing byCommodityArrayList");
+		printArrayList(byCommodityArrayList);
+		System.out.println("Printing byDealerArrayList");
+		printArrayList(byDealerArrayList);
 		
 		//Check for empty array from either commodity/dealer
 		if ((byCommodityArrayList.get(0).equals("0")) || (byDealerArrayList.get(0).equals("0"))) {
@@ -185,10 +189,18 @@ public class DATA {
 		if (byCommodityArrayList.size() < byDealerArrayList.size()) {
 			tempArrayListSmall = byCommodityArrayList;
 			tempArrayListLarge = byDealerArrayList;
+			System.out.println("Printing tempArrayListSmall");
+			printArrayList(tempArrayListSmall);
+			System.out.println("Printing tempArrayListLarge");
+			printArrayList(tempArrayListLarge);
 		}
 		else {
 			tempArrayListSmall = byDealerArrayList;
 			tempArrayListLarge = byCommodityArrayList;
+			System.out.println("Printing tempArrayListSmall");
+			printArrayList(tempArrayListSmall);
+			System.out.println("Printing tempArrayListLarge");
+			printArrayList(tempArrayListLarge);
 		}
 		
 		//construct arraylist with initial size of smaller temparraylist - to add orderIDs that exist in both arrays
@@ -199,6 +211,8 @@ public class DATA {
 			boolean match = tempArrayListLarge.contains(tempArrayListSmall.get(i));
 			if (match = true) {
 				resultList.add(tempArrayListSmall.get(i));
+				System.out.println("Printing tempArrayListSmall");
+				printArrayList(tempArrayListSmall);
 			}
 		}
 		
@@ -207,6 +221,9 @@ public class DATA {
 			resultList.add("0");
 			return resultList;
 		}
+		System.out.println("Printing resultList");
+		printArrayList(resultList);
+		
 		return resultList;
 	}
 	
@@ -230,6 +247,12 @@ public class DATA {
 		return result;
 	}
 	
+	public void printArrayList (ArrayList<String> al) {
+		for (int i=0; i < al.size(); i++) {
+			System.out.println(al.get(i));
+		}
+	}
+		
 	
 
 }

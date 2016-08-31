@@ -32,7 +32,7 @@ public class CMS {
 		}
 		else {
 			System.out.println("Please retry with one of these three arguments: \n "
-					+ "\t base - Communication may be done using system.in/system.out \n"
+					+ "\t base - Communication may be done using system.in and system.out \n"
 					+ "\t ext1 - Communication may occur over a single TCP connection \n"
 					+ "\t ext2 - Communication may occur over multiple TCP connections  \n");
 			System.exit(-1);
