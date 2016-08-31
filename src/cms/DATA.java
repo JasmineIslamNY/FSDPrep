@@ -174,10 +174,6 @@ public class DATA {
 		
 		ArrayList<String> byCommodityArrayList = retrieveByCommodity(commodity);
 		ArrayList<String> byDealerArrayList = retrieveByDealerID(dealerID);
-		System.out.println("Printing byCommodityArrayList");
-		printArrayList(byCommodityArrayList);
-		System.out.println("Printing byDealerArrayList");
-		printArrayList(byDealerArrayList);
 		
 		//Check for empty array from either commodity/dealer
 		if ((byCommodityArrayList.get(0).equals("0")) || (byDealerArrayList.get(0).equals("0"))) {
@@ -189,18 +185,10 @@ public class DATA {
 		if (byCommodityArrayList.size() < byDealerArrayList.size()) {
 			tempArrayListSmall = byCommodityArrayList;
 			tempArrayListLarge = byDealerArrayList;
-			System.out.println("Printing tempArrayListSmall");
-			printArrayList(tempArrayListSmall);
-			System.out.println("Printing tempArrayListLarge");
-			printArrayList(tempArrayListLarge);
 		}
 		else {
 			tempArrayListSmall = byDealerArrayList;
 			tempArrayListLarge = byCommodityArrayList;
-			System.out.println("Printing tempArrayListSmall");
-			printArrayList(tempArrayListSmall);
-			System.out.println("Printing tempArrayListLarge");
-			printArrayList(tempArrayListLarge);
 		}
 		
 		//construct arraylist with initial size of smaller temparraylist - to add orderIDs that exist in both arrays
@@ -208,11 +196,10 @@ public class DATA {
 		
 		//do a search on the larger arraylist
 		for (int i=0; i < tempArrayListSmall.size(); i++) {
-			boolean match = tempArrayListLarge.contains(tempArrayListSmall.get(i));
-			if (match = true) {
+			//boolean match = tempArrayListLarge.contains(tempArrayListSmall.get(i));
+			//if (match = true) {
+			if (tempArrayListLarge.contains(tempArrayListSmall.get(i))) {
 				resultList.add(tempArrayListSmall.get(i));
-				System.out.println("Printing tempArrayListSmall");
-				printArrayList(tempArrayListSmall);
 			}
 		}
 		
@@ -221,9 +208,6 @@ public class DATA {
 			resultList.add("0");
 			return resultList;
 		}
-		System.out.println("Printing resultList");
-		printArrayList(resultList);
-		
 		return resultList;
 	}
 	
@@ -247,11 +231,13 @@ public class DATA {
 		return result;
 	}
 	
+	/*
 	public void printArrayList (ArrayList<String> al) {
 		for (int i=0; i < al.size(); i++) {
 			System.out.println(al.get(i));
 		}
 	}
+	*/
 		
 	
 
