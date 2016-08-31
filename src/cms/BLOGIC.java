@@ -213,14 +213,52 @@ public class BLOGIC {
 	}
 	
 	private String processAggress(String [] resultArray) {
-		String tempString = "";
+		String result = "";
+		/*Steps to aggress order:
+		 * 1. Check Command to see if Order_ID and Amount are specified (“INVALID_MESSAGE” otherwise)
+		 * 2. Retrieve order by order ID - Send UNKNOWN_ORDER otherwise
+		 * 3. Check Amount from outstanding order and complete order/error message
+		 * 3a. If requested amount is <= outstanding order amount, send modify to DATA with reduced/new quantity (confirm successful) and send TRADE_REPORT message
+		 * 3b. If requested amount is > outstanding order amount, send error message (UNAUTHORIZED - amount requested is larger than amount available)
+		 * Note: format of resultArray - resultArray[0] = Dealer_ID, resultArray[1] = AGGRESS, resultArray[2] = Order_ID, resultArray[3] = Amount 
+		 * Note: format of order - order[0] = Dealer_ID, order[1] = Buy|Sell, order[2] = Commodity, order[3] = Amount, order[4] = Price
+		*/
 		
-		if (modifyOrder[1].equals("BUY")) {
-			String Action = "SOLD";
+		//Step 1: Check Command to see if Order_ID and Amount are specified
+		if (resultArray.length != 4) {
+			result = "INVALID_MESSAGE";
+			return result;
 		}
-		else if (modifyOrder[1].equals("SELL")) {
-			String Action = "BOUGHT";
+		
+		//Step 2. Retrieve order by order ID (UNKNOWN_ORDER otherwise)
+		String[] order = (String[]) dStore.retrieveByOrderID(resultArray[2]);
+		
+		if (order[0].equals("UNKNOWN_ORDER")) {
+			result = "UNKNOWN_ORDER";
+			return result;
 		}
+		//Step 3. Check Amount from outstanding order and complete order/error message
+		else {
+			if (Integer.parseInt(resultArray[3]) <= Integer.parseInt(order[3])){
+				String[] modifyOrder = {order[0], order[1], order[2], (String.valueOf(Integer.parseInt(order[3]) - Integer.parseInt(resultArray[3]))), order[4]};
+				String tempResult = dStore.modify(resultArray[2], modifyOrder);
+				if (tempResult.equals("SUCCESS")){
+					//create TRADE_REPORT - ACTION AMOUNT COMMODITY “@” PRICE “FROM” DEALER_ID
+					String Action = "";
+					if (order[1].equals("BUY")) {
+						Action = "SOLD";
+					}
+					else if (order[1].equals("SELL")) {
+						Action = "BOUGHT";
+					}
+				}
+			}
+		}	
+		return result;
+		
+		
+		
+		
 		
 		return tempString;
 	}
