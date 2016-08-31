@@ -9,28 +9,32 @@ public class BLOGIC {
 	DATA dStore = new DATA();
 
 	public String processor(String order) {
-		/**
-		 * This method processes the command entered by a user/system.  
-		 * It checks the command for size (255 or less) 
-		 * Breaks it into component pieces
-		 * Checks that tokens are between 3 and 6
-		 * Uses try/catch to convert price and amount 
-		 * Invokes proper method as per message 
-		 * Returns message/result to caller
+		/**Steps to process order:
+		 * *****************************
+		 * These steps are done by StringProcessor.java
+		 * 1. It checks the command for size (255 or less) 
+		 * 2. Breaks it into component pieces
+		 * 3. Checks that tokens are between 2 and 6
+		 * 4. Uses try/catch to convert price and amount 
+		 * *****************************
+		 * These steps are done by BLOGIC.java
+		 * 5. Check if StringProcessor found any errors
+		 * 6. Invokes proper method as per message 
+		 * 7. Returns message/result to caller
 		 */
 		String result = "";
 		
-		//Convert command to an array and check for size/price/amount
+		//Steps 1-4
 		StringProcessor sp = new StringProcessor();
 		String [] resultArray = sp.process(order);
 		
-		//Check for error and report back to user if needed
+		//Step 5. Check if StringProcessor found any errors
 		if (resultArray[0].equals("INVALID_MESSAGE") || resultArray[0].equals("UNAUTHORIZED")) {
 			result = resultArray[0] + ": " + resultArray[1];
 			return result;
 		}
 		
-		//Process the command
+		//Step 6. Invokes proper method as per message 
 		switch (resultArray[1]) {
 		case "POST":
 			result = processPost(resultArray);
@@ -52,7 +56,7 @@ public class BLOGIC {
 			break;
 		}
 	
-		//Return result to method caller
+		//Step 7. Returns message/result to caller
 		return result;
 	}
 	

@@ -5,24 +5,23 @@ public class StringProcessor {
 	
 	public String[] process (String order) {
 		String [] result;
-
-		/**
-		 * This class processes the string command entered by a user/system.  
-		 * It checks the command for size (255 or less) 
-		 * Breaks it into component pieces
-		 * Checks that tokens are between 2 and 6
-		 * Checks that the dealer sending the request is valid
-		 * Uses try/catch to test convert price and amount 
-		 * Returns String array to caller
+		/**Steps to process request:
+		 * 1. It checks the command for size (255 or less) 
+		 * 2. Breaks it into component pieces
+		 * 3. Checks that tokens are between 2 and 6
+		 * 4. Checks that the dealer sending the request is valid
+		 * 5. Uses try/catch to test convert price and amount 
+		 * 6. Returns String array to caller
 		 */
 		
-		//check length of command user input is 255 or less
+		//Step 1. It checks the command for size (255 or less) 
 		if (order.length() > 255) {
 			result = new String[]{"INVALID_MESSAGE", "Command length limited to 255 characters"};
 			return result;
 		}
 		
-		// take the string that user input and break it up into an array 
+		//Step 2. Breaks it into component pieces 
+		//Step 3. Checks that tokens are between 2 and 6
 		result = tokenize(order);
 		
 		//check that the message is not Invalid
@@ -30,13 +29,14 @@ public class StringProcessor {
 			return result;
 		}
 		
-		//check that the dealer sending the request is valid
+		//Step 4. Checks that the dealer sending the request is valid
 		if (!(DATA.checkDealerID(result[0]))) {
 			result[0] = "UNAUTHORIZED";
 			result[1] = "You are not authorized to use this system";
 			return result;
 		}
 		
+		//Step 5. Uses try/catch to test convert price and amount
 		//check POST command
 		if (result[1].equals("POST")) {
 			//check that Price can be converted to Double
@@ -70,13 +70,10 @@ public class StringProcessor {
 			catch (NumberFormatException e){
 				result[0] = "INVALID_MESSAGE";
 				result[1] = "Amount was not input correctly";
-				
 			}
 		}
-
-		
-		return result;
-		
+		//Step 6. Returns String array to caller
+		return result;	
 	}
 	
 	private String[] tokenize(String order) {
