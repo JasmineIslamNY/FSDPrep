@@ -41,7 +41,7 @@ public class StringProcessor {
 		if (result[1].equals("POST")) {
 			//check that Price can be converted to Double
 			try {
-				Double d = Double.parseDouble(result[5]);
+				Double.parseDouble(result[5]);
 			}
 			catch (NumberFormatException e){
 				result[0] = "INVALID_MESSAGE";
@@ -49,7 +49,7 @@ public class StringProcessor {
 			}
 			//check that Amount can be converted to Integer for POST
 			try {
-				Integer i = Integer.parseInt(result[4]);
+				Integer.parseInt(result[4]);
 			}
 			catch (NumberFormatException e){
 				if (result[0].equals("INVALID_MESSAGE")) {
@@ -65,7 +65,7 @@ public class StringProcessor {
 		//check that Amount can be converted to Integer for AGGRESS
 		if (result[1].equals("AGGRESS")) {
 			try {
-				Integer i = Integer.parseInt(result[3]);
+				Integer.parseInt(result[3]);
 			}
 			catch (NumberFormatException e){
 				result[0] = "INVALID_MESSAGE";

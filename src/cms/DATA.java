@@ -8,9 +8,9 @@ public class DATA {
 	static Integer orderCounter = 0;
 	static String [] dealerID = new String[] {"DB", "JPM", "UBS", "RBC", "BARX", "MS", "CITI", "BOFA", "RBS", "HSBC"};
 	static String [] commodity = new String[] {"GOLD", "SILV", "PORK", "OIL", "RICE"};
-	private static HashMap<String, String[]> dBase = new HashMap(100);
-	private static HashMap<String, ArrayList<String>> dBaseByDealerID = new HashMap(100);
-	private static HashMap<String, ArrayList<String>> dBaseByCommodity = new HashMap(100);
+	private static HashMap<String, String[]> dBase = new HashMap<String, String[]>(100);
+	private static HashMap<String, ArrayList<String>> dBaseByDealerID = new HashMap<String, ArrayList<String>>(100);
+	private static HashMap<String, ArrayList<String>> dBaseByCommodity = new HashMap<String, ArrayList<String>>(100);
 	
 	public String add(String [] addOrder) {
 		/*Steps to add order:

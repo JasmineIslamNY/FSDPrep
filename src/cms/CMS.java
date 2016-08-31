@@ -48,19 +48,18 @@ public class CMS {
 			InputStreamReader	kbd = new InputStreamReader(System.in);	 
 			BufferedReader kbdBuf = new BufferedReader(kbd);	
 			BLOGIC bLogic = new BLOGIC();
+			System.out.println ("Thank you for using the Commodity Market System (CMS) \n");
 
-	      		while(true)
-	      		{
-				System.out.println
-					("Enter command and press enter: (or enter to quit) \n");
+	      	while(true) {
+	      		System.out.println ("Enter command and press enter: (or enter to quit) \n");
 
-				String input = kbdBuf.readLine();				
+	      		String input = kbdBuf.readLine();				
 
-				if (input.equals(""))						
+	      		if (input.equals(""))						
 		      			System.exit(0);
 													
-				System.out.println("Processing: " + input + "\n");
-				System.out.println(bLogic.processor(input) + "\n");
+	      		System.out.println("Processing: " + input + "\n");
+	      		System.out.println(bLogic.processor(input) + "\n");
 		      	}									
 		}
 		catch (IOException e)							

@@ -1,7 +1,6 @@
 package cms;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BLOGIC {
 	protected static String [] availableCommands = {"POST", "REVOKE", "CHECK", "LIST", "AGGRESS"};
