@@ -12,7 +12,7 @@ public class CMS {
 		if (args.length < 1)
 		{
 			System.out.println("Please retry with one of these three arguments: \n "
-					+ "\t base - Communication may be done using system.in/system.out \n"
+					+ "\t base - Communication may be done using system.in and system.out \n"
 					+ "\t ext1 - Communication may occur over a single TCP connection \n"
 					+ "\t ext2 - Communication may occur over multiple TCP connections  \n");
 			System.exit(-1);
@@ -36,11 +36,8 @@ public class CMS {
 					+ "\t ext1 - Communication may occur over a single TCP connection \n"
 					+ "\t ext2 - Communication may occur over multiple TCP connections  \n");
 			System.exit(-1);
-		}
-		
-		
-										
-}
+		}									
+	}
 	
 	public static void processKeyboardInput() {
 		try 
@@ -52,7 +49,7 @@ public class CMS {
 	      		while(true)
 	      		{
 				System.out.println
-					("Enter command please: (PUT A TIMER HERE - enter for now) \n");
+					("Enter command and press enter: (or enter to quit) \n");
 
 				String input = kbdBuf.readLine();				
 
@@ -61,8 +58,6 @@ public class CMS {
 													
 				System.out.println("Processing: " + input + "\n");
 				System.out.println(bLogic.processor(input) + "\n");
-
-			
 		      	}									
 		}
 		catch (IOException e)							
@@ -70,5 +65,4 @@ public class CMS {
 	      		System.err.println(e);						
 		}	
 	}
-
 }

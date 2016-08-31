@@ -137,8 +137,6 @@ public class DATA {
 			return resultList;
 		}
 		else {
-			//String[] resultArray = new String[] {"0"};
-			//return resultArray;
 			ArrayList<String> resultList = new ArrayList<String>(1);
 			resultList.add("0");
 			return resultList;
@@ -148,13 +146,9 @@ public class DATA {
 	public ArrayList<String> retrieveByDealerID (String dealerID) {
 		if (dBaseByDealerID.containsKey(dealerID)) {
 			ArrayList<String> resultList = (ArrayList<String>) dBaseByDealerID.get(dealerID);
-			//String[] resultArray = Arrays.copyOf(resultList.toArray(), resultList.toArray().length, String[].class);
-			//return resultArray;
 			return resultList;
 		}
 		else {
-			//String[] resultArray = new String[] {"0"};
-			//return resultArray;
 			ArrayList<String> resultList = new ArrayList<String>(1);
 			resultList.add("0");
 			return resultList;
@@ -164,13 +158,9 @@ public class DATA {
 	public ArrayList<String> retrieveByCommodity (String commodity) {
 		if (dBaseByCommodity.containsKey(commodity)) {
 			ArrayList<String> resultList = (ArrayList<String>) dBaseByCommodity.get(commodity);
-			//String[] resultArray = Arrays.copyOf(resultList.toArray(), resultList.toArray().length, String[].class);
-			//return resultArray;
 			return resultList;
 		}
 		else {
-			//String[] resultArray = new String[] {"0"};
-			//return resultArray;
 			ArrayList<String> resultList = new ArrayList<String>(1);
 			resultList.add("0");
 			return resultList;
@@ -187,8 +177,6 @@ public class DATA {
 		
 		//Check for empty array from either commodity/dealer
 		if ((byCommodityArrayList.get(0).equals("0")) || (byDealerArrayList.get(0).equals("0"))) {
-				//String[] resultArray = new String[] {"0"};
-				//return resultArray;
 			ArrayList<String> resultList = new ArrayList<String>(1);
 			resultList.add("0");
 			return resultList;
@@ -216,12 +204,9 @@ public class DATA {
 		
 		//check for empty result set
 		if (resultList.size() == 0) {
-			//String[] resultArray = new String[] {"0"};
-			//return resultArray;
 			resultList.add("0");
 			return resultList;
 		}
-		//create an String array from temp arraylist
 		return resultList;
 	}
 	
